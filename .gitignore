@@ -4,3 +4,5 @@ uploads/*
 *.db
 .DS_Store
 *.log
+PROJECT_SUMMARY.md
+UI_IMPROVEMENTS.md
