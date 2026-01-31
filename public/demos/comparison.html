@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before vs After - PreFirewall Lab</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .comparison-box {
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .comparison-box.danger {
+            border-color: var(--danger);
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.1), transparent);
+        }
+
+        .comparison-box.success {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), transparent);
+        }
+
+        .comparison-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .attack-result {
+            background: rgba(26, 26, 46, 0.8);
+            border-left: 4px solid;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        .attack-result.blocked {
+            border-color: var(--success);
+        }
+
+        .attack-result.allowed {
+            border-color: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Warning Banner -->
+    <div class="warning-banner">
+        ⚠️ BEFORE VS AFTER COMPARISON - SEE THE DIFFERENCE ⚠️
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🔥</span>
+                <div>
+                    <h1>PreFirewall Lab</h1>
+                    <p class="tagline">Before vs After Comparison</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/demos/dashboard.html">Dashboard</a></li>
+                    <li><a href="/demos/attacks.html">Try Attacks</a></li>
+                    <li><a href="/demos/quickstart.html">Quick Start</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="demo-header fade-in">
+            <h1>🛡️ Before vs After Firewall</h1>
+            <p style="color: var(--text-muted);">
+                See the dramatic difference between an unprotected application and one behind a firewall/WAF.
+            </p>
+        </div>
+
+        <!-- Overview Section -->
+        <div class="comparison-grid">
+            <div class="comparison-box danger">
+                <div class="comparison-title">
+                    <span>❌</span>
+                    <span>WITHOUT FIREWALL</span>
+                </div>
+                <ul style="color: var(--text-muted); line-height: 2;">
+                    <li>All attacks succeed</li>
+                    <li>No protection layer</li>
+                    <li>Database exposed</li>
+                    <li>Zero visibility</li>
+                    <li>No rate limiting</li>
+                    <li>Complete vulnerability</li>
+                </ul>
+            </div>
+
+            <div class="comparison-box success">
+                <div class="comparison-title">
+                    <span>✅</span>
+                    <span>WITH FIREWALL</span>
+                </div>
+                <ul style="color: var(--text-muted); line-height: 2;">
+                    <li>Attacks blocked instantly</li>
+                    <li>Multiple protection layers</li>
+                    <li>Database secured</li>
+                    <li>Full visibility & logging</li>
+                    <li>Rate limiting enforced</li>
+                    <li>Complete protection</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SQL Injection Comparison -->
+        <div class="demo-section mt-4">
+            <h2>💉 SQL Injection Attack</h2>
+            <p style="color: var(--text-muted);">Attack: <code>admin' OR '1'='1</code></p>
+
+            <div class="comparison-grid">
+                <div>
+                    <h3 style="color: var(--danger);">❌ Without Firewall</h3>
+                    <div class="attack-result allowed">
+                        <strong>Status:</strong> SUCCESS ✓<br>
+                        <strong>Response Time:</strong> 15ms<br>
+                        <strong>Data Exposed:</strong> ALL users<br><br>
+                        <code style="color: var(--danger);">
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "ssn": "123-45-6789",
+      "credit_card": "4111111111111111"
+    },
+    ...
+  ]
+}
+                        </code>
+                    </div>
+                    <div class="alert alert-danger">
+                        <strong>Impact:</strong> Complete database compromise. All user credentials, SSNs, and payment info exposed.
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--success);">✅ With Firewall</h3>
+                    <div class="attack-result blocked">
+                        <strong>Status:</strong> BLOCKED ✗<br>
+                        <strong>Response Time:</strong> 3ms<br>
+                        <strong>Detection:</strong> SQL keywords<br><br>
+                        <code style="color: var(--success);">
+{
+  "error": "Forbidden",
+  "message": "SQL injection detected",
+  "blocked_pattern": "OR '1'='1",
+  "action": "Request blocked by WAF"
+}
+                        </code>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Protection:</strong> Attack detected and blocked before reaching application. No data exposed.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- XSS Comparison -->
+        <div class="demo-section mt-4">
+            <h2>🔴 Cross-Site Scripting (XSS)</h2>
+            <p style="color: var(--text-muted);">Attack: <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></p>
+
+            <div class="comparison-grid">
+                <div>
+                    <h3 style="color: var(--danger);">❌ Without Firewall</h3>
+                    <div class="attack-result allowed">
+                        <strong>Status:</strong> EXECUTED ✓<br>
+                        <strong>Script Ran:</strong> Yes<br>
+                        <strong>Cookies Stolen:</strong> Possible<br><br>
+                        <code style="color: var(--danger);">
+{
+  "html": "&lt;h1&gt;Hello &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/h1&gt;"
+}
+                        </code>
+                    </div>
+                    <div class="alert alert-danger">
+                        <strong>Impact:</strong> Malicious JavaScript executes in users' browsers. Can steal sessions, redirect users, or modify page content.
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--success);">✅ With Firewall</h3>
+                    <div class="attack-result blocked">
+                        <strong>Status:</strong> BLOCKED ✗<br>
+                        <strong>Script Ran:</strong> No<br>
+                        <strong>Detection:</strong> &lt;script&gt; tag<br><br>
+                        <code style="color: var(--success);">
+{
+  "error": "Forbidden",
+  "message": "XSS attack detected",
+  "blocked_pattern": "&lt;script&gt;",
+  "action": "Request sanitized by WAF"
+}
+                        </code>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Protection:</strong> Script tags stripped or encoded. No JavaScript execution. Users remain safe.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Command Injection Comparison -->
+        <div class="demo-section mt-4">
+            <h2>⚡ Command Injection</h2>
+            <p style="color: var(--text-muted);">Attack: <code>127.0.0.1; whoami</code></p>
+
+            <div class="comparison-grid">
+                <div>
+                    <h3 style="color: var(--danger);">❌ Without Firewall</h3>
+                    <div class="attack-result allowed">
+                        <strong>Status:</strong> EXECUTED ✓<br>
+                        <strong>Commands Run:</strong> 2<br>
+                        <strong>Server Compromised:</strong> Yes<br><br>
+                        <code style="color: var(--danger);">
+{
+  "output": "PING 127.0.0.1...
+root
+"
+}
+                        </code>
+                    </div>
+                    <div class="alert alert-danger">
+                        <strong>Impact:</strong> Arbitrary commands execute on server. Attacker can read files, install malware, or take full control.
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--success);">✅ With Firewall</h3>
+                    <div class="attack-result blocked">
+                        <strong>Status:</strong> BLOCKED ✗<br>
+                        <strong>Commands Run:</strong> 0<br>
+                        <strong>Detection:</strong> Semicolon<br><br>
+                        <code style="color: var(--success);">
+{
+  "error": "Forbidden",
+  "message": "Command injection detected",
+  "blocked_pattern": "semicolon (;)",
+  "action": "Request blocked by WAF"
+}
+                        </code>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Protection:</strong> Command metacharacters detected and blocked. Server remains secure.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Path Traversal Comparison -->
+        <div class="demo-section mt-4">
+            <h2>📁 Path Traversal</h2>
+            <p style="color: var(--text-muted);">Attack: <code>../../../../etc/passwd</code></p>
+
+            <div class="comparison-grid">
+                <div>
+                    <h3 style="color: var(--danger);">❌ Without Firewall</h3>
+                    <div class="attack-result allowed">
+                        <strong>Status:</strong> SUCCESS ✓<br>
+                        <strong>File Read:</strong> /etc/passwd<br>
+                        <strong>Sensitive Data:</strong> Exposed<br><br>
+                        <code style="color: var(--danger); font-size: 0.8rem;">
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+...
+                        </code>
+                    </div>
+                    <div class="alert alert-danger">
+                        <strong>Impact:</strong> System files exposed. Attacker can read configuration, credentials, and sensitive data.
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--success);">✅ With Firewall</h3>
+                    <div class="attack-result blocked">
+                        <strong>Status:</strong> BLOCKED ✗<br>
+                        <strong>File Read:</strong> None<br>
+                        <strong>Detection:</strong> ../ pattern<br><br>
+                        <code style="color: var(--success);">
+{
+  "error": "Forbidden",
+  "message": "Path traversal detected",
+  "blocked_pattern": "../",
+  "action": "Request blocked by WAF"
+}
+                        </code>
+                    </div>
+                    <div class="alert alert-success">
+                        <strong>Protection:</strong> Traversal sequences detected. Files remain secure. No data leakage.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Comparison -->
+        <div class="demo-section mt-4">
+            <h2>📊 30-Day Statistics</h2>
+            
+            <div class="comparison-grid">
+                <div class="comparison-box danger">
+                    <div class="comparison-title" style="font-size: 1.2rem;">
+                        ❌ WITHOUT FIREWALL
+                    </div>
+                    <div style="margin: 2rem 0;">
+                        <div style="margin: 1rem 0;">
+                            <strong>SQL Injection Attempts:</strong> 2,847
+                            <div style="color: var(--danger);">✗ All succeeded (100%)</div>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <strong>XSS Attempts:</strong> 1,523
+                            <div style="color: var(--danger);">✗ All executed (100%)</div>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <strong>Brute Force Attempts:</strong> 8,942
+                            <div style="color: var(--danger);">✗ No rate limiting (unlimited)</div>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <strong>Data Breaches:</strong> 14
+                            <div style="color: var(--danger);">✗ Complete exposure</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 3rem; text-align: center; color: var(--danger);">
+                        100%
+                    </div>
+                    <div style="text-align: center; color: var(--danger); font-weight: bold;">
+                        ATTACK SUCCESS RATE
+                    </div>
+                </div>
+
+                <div class="comparison-box success">
+                    <div class="comparison-title" style="font-size: 1.2rem;">
+                        ✅ WITH FIREWALL
+                    </div>
+                    <div style="margin: 2rem 0;">
+                        <div style="margin: 1rem 0;">
+                            <strong>SQL Injection Attempts:</strong> 2,847
+                            <div style="color: var(--success);">✓ All blocked (0% success)</div>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <strong>XSS Attempts:</strong> 1,523
+                            <div style="color: var(--success);">✓ All blocked (0% success)</div>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <strong>Brute Force Attempts:</strong> 8,942
+                            <div style="color: var(--success);">✓ Rate limited (98% blocked)</div>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <strong>Data Breaches:</strong> 0
+                            <div style="color: var(--success);">✓ Complete protection</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 3rem; text-align: center; color: var(--success);">
+                        0%
+                    </div>
+                    <div style="text-align: center; color: var(--success); font-weight: bold;">
+                        ATTACK SUCCESS RATE
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Comparison -->
+        <div class="demo-section mt-4">
+            <h2>💰 Cost of a Breach vs Firewall</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Without Firewall</th>
+                        <th>With Firewall</th>
+                        <th>Savings</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Average Data Breach Cost</strong></td>
+                        <td style="color: var(--danger);">$4.45 million</td>
+                        <td style="color: var(--success);">$0</td>
+                        <td style="color: var(--success);">$4.45M</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Customer Trust Lost</strong></td>
+                        <td style="color: var(--danger);">High</td>
+                        <td style="color: var(--success);">None</td>
+                        <td style="color: var(--success);">Invaluable</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Compliance Fines</strong></td>
+                        <td style="color: var(--danger);">$50K - $20M</td>
+                        <td style="color: var(--success);">$0</td>
+                        <td style="color: var(--success);">Millions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Firewall/WAF Cost</strong></td>
+                        <td style="color: var(--text-muted);">$0</td>
+                        <td style="color: var(--primary-color);">$5K - $50K/year</td>
+                        <td style="color: var(--success);">ROI: 100x+</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security Incidents</strong></td>
+                        <td style="color: var(--danger);">14 per month</td>
+                        <td style="color: var(--success);">0 per month</td>
+                        <td style="color: var(--success);">100% reduction</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="demo-section mt-4">
+            <div style="background: linear-gradient(135deg, rgba(255, 68, 68, 0.2), rgba(15, 52, 96, 0.2)); border: 2px solid var(--primary-color); border-radius: 12px; padding: 3rem; text-align: center;">
+                <h2 style="font-size: 2rem; margin-bottom: 1rem;">The Choice is Clear</h2>
+                <p style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 2rem;">
+                    Don't leave your application vulnerable. Deploy firewall protection today.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/demos/attacks.html" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                        🎯 Try Attacks Yourself
+                    </a>
+                    <a href="/demos/dashboard.html" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                        📊 View Dashboard
+                    </a>
+                    <a href="/" class="btn btn-secondary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                        📖 Read Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>PreFirewall Lab - Before vs After Comparison</strong></p>
+        <p style="color: var(--text-muted);">See the difference protection makes</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

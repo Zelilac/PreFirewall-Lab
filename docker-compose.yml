@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  prefirewall-lab:
+    build: .
+    container_name: prefirewall-lab
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - lab-network
+    labels:
+      - "security.warning=INTENTIONALLY VULNERABLE"
+      - "purpose=security-demonstration"
+
+networks:
+  lab-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# WARNING: This application is INTENTIONALLY VULNERABLE
+# Use only in isolated lab environments
+# DO NOT expose to the internet or untrusted networks

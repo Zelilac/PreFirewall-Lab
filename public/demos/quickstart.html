@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start Guide - PreFirewall Lab</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Warning Banner -->
+    <div class="warning-banner">
+        ⚠️ QUICK START GUIDE - GET STARTED IN MINUTES ⚠️
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🔥</span>
+                <div>
+                    <h1>PreFirewall Lab</h1>
+                    <p class="tagline">Quick Start Guide</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/demos/dashboard.html">Dashboard</a></li>
+                    <li><a href="/demos/attacks.html">Try Attacks</a></li>
+                    <li><a href="/demos/quickstart.html">Quick Start</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="demo-header fade-in">
+            <h1>🚀 Quick Start Guide</h1>
+            <p style="color: var(--text-muted);">
+                Get PreFirewall Lab running in under 5 minutes with this step-by-step guide.
+            </p>
+        </div>
+
+        <!-- Step 1: Installation -->
+        <div class="demo-section">
+            <h2>📦 Step 1: Installation</h2>
+            
+            <h3>Option A: Clone from GitHub</h3>
+            <pre><code>git clone https://github.com/yourusername/prefirewall-lab.git
+cd prefirewall-lab
+npm install</code></pre>
+
+            <h3>Option B: Using Docker</h3>
+            <pre><code>docker build -t prefirewall-lab .
+docker run -p 3000:3000 prefirewall-lab</code></pre>
+
+            <div class="alert alert-info mt-3">
+                <strong>Requirements:</strong> Node.js 18+, npm 9+, or Docker
+            </div>
+        </div>
+
+        <!-- Step 2: Start the Server -->
+        <div class="demo-section mt-4">
+            <h2>▶️ Step 2: Start the Server</h2>
+            
+            <pre><code># Start in development mode
+npm start
+
+# Or with Docker Compose
+docker-compose up</code></pre>
+
+            <p>The server will start on <code>http://localhost:3000</code></p>
+
+            <div class="alert alert-success mt-3">
+                <strong>✅ Server Started!</strong> You should see: "PreFirewall Lab running on port 3000"
+            </div>
+        </div>
+
+        <!-- Step 3: Access the UI -->
+        <div class="demo-section mt-4">
+            <h2>🌐 Step 3: Access the Web Interface</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="card">
+                    <h3>🏠 Landing Page</h3>
+                    <p><a href="/">http://localhost:3000/</a></p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Overview, statistics, and documentation
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>📊 Dashboard</h3>
+                    <p><a href="/demos/dashboard.html">http://localhost:3000/demos/dashboard.html</a></p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Live vulnerability monitoring
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Try Attacks</h3>
+                    <p><a href="/demos/attacks.html">http://localhost:3000/demos/attacks.html</a></p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">
+                        Interactive attack interface
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Try Your First Attack -->
+        <div class="demo-section mt-4">
+            <h2>💥 Step 4: Try Your First Attack</h2>
+            
+            <div class="alert alert-info">
+                <strong>Tutorial:</strong> Execute a SQL Injection attack in 30 seconds
+            </div>
+
+            <ol style="line-height: 2;">
+                <li>Navigate to <a href="/demos/attacks.html">http://localhost:3000/demos/attacks.html</a></li>
+                <li>Click the <strong>"💉 SQL Injection"</strong> button</li>
+                <li>Scroll to <strong>"Attack 1: Classic OR Bypass"</strong></li>
+                <li>Click <strong>"🚀 Execute Attack"</strong></li>
+                <li>See the vulnerability results instantly!</li>
+            </ol>
+
+            <div class="alert alert-warning mt-3">
+                <strong>Expected Result:</strong> You'll see ALL user data including passwords and SSNs - demonstrating a critical vulnerability that a firewall would block.
+            </div>
+        </div>
+
+        <!-- Step 5: Use with Postman -->
+        <div class="demo-section mt-4">
+            <h2>📮 Step 5: Test with Postman (Optional)</h2>
+            
+            <ol style="line-height: 2;">
+                <li>Download the Postman collection: <code>postman/PreFirewall-Lab.postman_collection.json</code></li>
+                <li>Import it into Postman</li>
+                <li>Set the base URL to <code>http://localhost:3000</code></li>
+                <li>Start making requests to test vulnerabilities</li>
+            </ol>
+
+            <h3>Popular Endpoints to Try:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Vulnerability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>GET</td>
+                        <td><code>/api/sql/users?username=admin'OR'1'='1</code></td>
+                        <td>SQL Injection</td>
+                    </tr>
+                    <tr>
+                        <td>GET</td>
+                        <td><code>/api/xss/greet?name=&lt;script&gt;alert('XSS')&lt;/script&gt;</code></td>
+                        <td>Reflected XSS</td>
+                    </tr>
+                    <tr>
+                        <td>POST</td>
+                        <td><code>/api/command/ping</code> {"host": "127.0.0.1; whoami"}</td>
+                        <td>Command Injection</td>
+                    </tr>
+                    <tr>
+                        <td>GET</td>
+                        <td><code>/api/traversal/download?file=../../../../etc/passwd</code></td>
+                        <td>Path Traversal</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Step 6: Understand What You're Seeing -->
+        <div class="demo-section mt-4">
+            <h2>🎓 Step 6: Understand the Results</h2>
+            
+            <h3>Without Firewall (Current State)</h3>
+            <ul style="color: var(--text-muted);">
+                <li>✗ All attacks succeed immediately</li>
+                <li>✗ No filtering or validation</li>
+                <li>✗ Database data exposed</li>
+                <li>✗ Scripts execute</li>
+                <li>✗ Commands run on server</li>
+                <li>✗ Files can be read</li>
+                <li>✗ Unlimited brute force</li>
+            </ul>
+
+            <h3>With Firewall (After Deployment)</h3>
+            <ul style="color: var(--success);">
+                <li>✓ SQL keywords detected → <strong>BLOCKED</strong></li>
+                <li>✓ &lt;script&gt; tags filtered → <strong>BLOCKED</strong></li>
+                <li>✓ Command metacharacters → <strong>BLOCKED</strong></li>
+                <li>✓ Path traversal patterns → <strong>BLOCKED</strong></li>
+                <li>✓ Malicious file extensions → <strong>BLOCKED</strong></li>
+                <li>✓ Rate limiting enforced → <strong>BLOCKED</strong></li>
+            </ul>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="demo-section mt-4">
+            <h2>⏭️ Next Steps</h2>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <span class="card-icon">📖</span>
+                    <h3>Read Full Documentation</h3>
+                    <p>Detailed guides for all 6 vulnerability categories</p>
+                    <a href="/" class="btn btn-primary">View Docs</a>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">🎯</span>
+                    <h3>Try All Attack Types</h3>
+                    <p>Explore SQL, XSS, Command Injection, and more</p>
+                    <a href="/demos/attacks.html" class="btn btn-primary">Start Attacking</a>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">📊</span>
+                    <h3>Monitor Dashboard</h3>
+                    <p>See live vulnerability status and metrics</p>
+                    <a href="/demos/dashboard.html" class="btn btn-primary">View Dashboard</a>
+                </div>
+
+                <div class="card">
+                    <span class="card-icon">🛡️</span>
+                    <h3>Deploy a Firewall</h3>
+                    <p>See the difference protection makes</p>
+                    <a href="/" class="btn btn-secondary">Learn How</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="demo-section mt-4">
+            <h2>🔧 Troubleshooting</h2>
+            
+            <h3>Port Already in Use</h3>
+            <pre><code># Change port in environment variable
+PORT=3001 npm start</code></pre>
+
+            <h3>Database Errors</h3>
+            <pre><code># The app uses in-memory SQLite - restart to reset
+npm start</code></pre>
+
+            <h3>CORS Issues</h3>
+            <p>Make sure you're accessing via <code>http://localhost:3000</code> and not <code>file://</code></p>
+
+            <h3>Need Help?</h3>
+            <ul>
+                <li>Check <code>README.md</code> for detailed documentation</li>
+                <li>Review <code>DEMO_GUIDE.md</code> for attack examples</li>
+                <li>Open an issue on GitHub</li>
+            </ul>
+        </div>
+
+        <!-- Success Checklist -->
+        <div class="demo-section mt-4">
+            <div class="alert alert-success">
+                <h3>✅ Success Checklist</h3>
+                <p>You're ready when you can:</p>
+                <ul style="margin: 1rem 0;">
+                    <li>✓ Access the landing page at http://localhost:3000</li>
+                    <li>✓ Execute a SQL injection attack</li>
+                    <li>✓ See vulnerability data in responses</li>
+                    <li>✓ View the dashboard with metrics</li>
+                    <li>✓ Understand before/after firewall differences</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-4">
+            <h2>🎉 Ready to Start?</h2>
+            <p style="color: var(--text-muted); margin: 1rem 0;">
+                Jump into the interactive interface and start exploring vulnerabilities!
+            </p>
+            <a href="/demos/attacks.html" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+                🚀 Start Your First Attack
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>PreFirewall Lab - Quick Start Guide</strong></p>
+        <p style="color: var(--text-muted);">Get started in under 5 minutes</p>
+    </footer>
+
+    <script>
+        // Show success message after page load
+        setTimeout(() => {
+            if (window.showNotification) {
+                showNotification('Quick Start Guide loaded! Follow the steps above to get started.', 'success');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

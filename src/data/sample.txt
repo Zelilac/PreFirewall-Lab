@@ -1,0 +1,9 @@
+This is a sample text file for testing the file download functionality.
+
+In a real application, this might contain:
+- User documents
+- Reports
+- Export files
+- Backups
+
+PreFirewall Lab - Intentionally Vulnerable Application

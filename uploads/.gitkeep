@@ -1,0 +1,11 @@
+# Upload Directory
+
+This directory stores uploaded files (intentionally insecure).
+
+**WARNING**: In this vulnerable application:
+- No file type validation
+- No size restrictions
+- Files are publicly accessible
+- Potential webshell uploads
+
+This demonstrates why firewalls/WAFs must inspect uploaded content.

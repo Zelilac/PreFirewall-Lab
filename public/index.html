@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PreFirewall Lab - See the Risk Before the Firewall Exists</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Warning Banner -->
+    <div class="warning-banner">
+        ⚠️ INTENTIONALLY VULNERABLE APPLICATION - LAB USE ONLY ⚠️
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🔥</span>
+                <div>
+                    <h1>PreFirewall Lab</h1>
+                    <p class="tagline">"See the risk before the firewall exists."</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/demos/dashboard.html">Dashboard</a></li>
+                    <li><a href="/demos/attacks.html">Try Attacks</a></li>
+                    <li><a href="#docs">Documentation</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero fade-in">
+        <h2>🛡️ Security Demonstration Platform</h2>
+        <p>
+            An intentionally vulnerable web application designed to showcase the dramatic difference
+            between unprotected systems and those behind firewalls/WAFs. Perfect for security training,
+            demos, and education.
+        </p>
+        <div class="hero-buttons">
+            <a href="/demos/attacks.html" class="btn btn-primary">🚀 Try Live Attacks</a>
+            <a href="/demos/dashboard.html" class="btn btn-secondary">📊 View Dashboard</a>
+            <a href="#vulnerabilities" class="btn btn-secondary">📖 Learn More</a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <div class="container">
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-number">6</span>
+                <span class="stat-label">Vulnerability Categories</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">36+</span>
+                <span class="stat-label">Attack Endpoints</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">30+</span>
+                <span class="stat-label">Postman Requests</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Vulnerable By Design</span>
+            </div>
+        </div>
+
+        <!-- Vulnerabilities Section -->
+        <h2 id="vulnerabilities" class="text-center mt-4 mb-4" style="font-size: 2rem;">
+            🎯 Attack Categories
+        </h2>
+        
+        <div class="cards-grid">
+            <!-- SQL Injection -->
+            <div class="card">
+                <span class="card-icon">💉</span>
+                <h3>SQL Injection</h3>
+                <p>
+                    Classic authentication bypasses, UNION-based data extraction, error-based SQLi,
+                    and blind SQL injection. No parameterized queries, direct string concatenation.
+                </p>
+                <span class="card-badge badge-critical">CRITICAL</span>
+                <div class="mt-2">
+                    <a href="/demos/sql.html" class="btn btn-primary" style="width: 100%;">
+                        Try SQL Injection →
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <small style="color: var(--text-muted);">
+                        ✓ OR bypass &nbsp; ✓ UNION attack &nbsp; ✓ Comment injection
+                    </small>
+                </div>
+            </div>
+
+            <!-- XSS -->
+            <div class="card">
+                <span class="card-icon">🔴</span>
+                <h3>Cross-Site Scripting (XSS)</h3>
+                <p>
+                    Reflected, stored, and DOM-based XSS vulnerabilities. No input sanitization,
+                    no output encoding, direct HTML injection possible.
+                </p>
+                <span class="card-badge badge-critical">CRITICAL</span>
+                <div class="mt-2">
+                    <a href="/demos/xss.html" class="btn btn-primary" style="width: 100%;">
+                        Try XSS Attacks →
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <small style="color: var(--text-muted);">
+                        ✓ Reflected &nbsp; ✓ Stored &nbsp; ✓ DOM-based
+                    </small>
+                </div>
+            </div>
+
+            <!-- Command Injection -->
+            <div class="card">
+                <span class="card-icon">⚡</span>
+                <h3>Command Injection</h3>
+                <p>
+                    Execute arbitrary OS commands through shell metacharacters. Semicolon chaining,
+                    pipe operators, command substitution - all unfiltered.
+                </p>
+                <span class="card-badge badge-critical">CRITICAL</span>
+                <div class="mt-2">
+                    <a href="/demos/command.html" class="btn btn-primary" style="width: 100%;">
+                        Try Command Injection →
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <small style="color: var(--text-muted);">
+                        ✓ Semicolon &nbsp; ✓ Pipe &nbsp; ✓ Backticks
+                    </small>
+                </div>
+            </div>
+
+            <!-- Path Traversal -->
+            <div class="card">
+                <span class="card-icon">📁</span>
+                <h3>Path Traversal</h3>
+                <p>
+                    Access files outside intended directory using ../ sequences. Read configuration
+                    files, sensitive system files, and application source code.
+                </p>
+                <span class="card-badge badge-high">HIGH</span>
+                <div class="mt-2">
+                    <a href="/demos/traversal.html" class="btn btn-primary" style="width: 100%;">
+                        Try Path Traversal →
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <small style="color: var(--text-muted);">
+                        ✓ ../ sequences &nbsp; ✓ Absolute paths &nbsp; ✓ Encoded
+                    </small>
+                </div>
+            </div>
+
+            <!-- File Upload -->
+            <div class="card">
+                <span class="card-icon">📤</span>
+                <h3>Insecure File Upload</h3>
+                <p>
+                    Upload any file type without restrictions. No validation, no size limits,
+                    executable files allowed. Perfect for webshell demonstrations.
+                </p>
+                <span class="card-badge badge-critical">CRITICAL</span>
+                <div class="mt-2">
+                    <a href="/demos/upload.html" class="btn btn-primary" style="width: 100%;">
+                        Try File Upload →
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <small style="color: var(--text-muted);">
+                        ✓ Any file type &nbsp; ✓ No size limit &nbsp; ✓ Webshells
+                    </small>
+                </div>
+            </div>
+
+            <!-- Brute Force -->
+            <div class="card">
+                <span class="card-icon">🔓</span>
+                <h3>Brute Force & Rate Limiting</h3>
+                <p>
+                    No rate limiting, unlimited login attempts, no CAPTCHA. OTP brute force possible,
+                    scanner detection failure, account enumeration.
+                </p>
+                <span class="card-badge badge-high">HIGH</span>
+                <div class="mt-2">
+                    <a href="/demos/brute.html" class="btn btn-primary" style="width: 100%;">
+                        Try Brute Force →
+                    </a>
+                </div>
+                <div class="mt-2">
+                    <small style="color: var(--text-muted);">
+                        ✓ No rate limit &nbsp; ✓ No lockout &nbsp; ✓ No CAPTCHA
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <section class="demo-section mt-4">
+            <h2 class="text-center mb-4" style="font-size: 2rem;">🎪 How It Works</h2>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>1️⃣ Pre-Firewall</h3>
+                    <p>Deploy PreFirewall Lab without firewall protection.</p>
+                    <ul style="color: var(--text-muted); margin-top: 1rem;">
+                        <li>Execute SQL injection → ✅ Succeeds</li>
+                        <li>Try XSS attacks → ✅ Executes</li>
+                        <li>Upload malicious files → ✅ Accepted</li>
+                        <li>Brute force logins → ✅ Unlimited</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>2️⃣ Deploy Firewall</h3>
+                    <p>Place firewall/WAF in front of the application.</p>
+                    <ul style="color: var(--text-muted); margin-top: 1rem;">
+                        <li>FortiGate, Palo Alto, Check Point</li>
+                        <li>ModSecurity, AWS WAF, Azure WAF</li>
+                        <li>Enable security profiles</li>
+                        <li>Configure logging and alerts</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>3️⃣ Post-Firewall</h3>
+                    <p>Re-run identical attacks with firewall active.</p>
+                    <ul style="color: var(--text-muted); margin-top: 1rem;">
+                        <li>SQL injection → ❌ Blocked</li>
+                        <li>XSS attacks → ❌ Filtered</li>
+                        <li>Malicious files → ❌ Rejected</li>
+                        <li>Brute force → ❌ Rate limited</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Endpoints Section -->
+        <section class="demo-section mt-4" id="docs">
+            <h2 class="text-center mb-4" style="font-size: 2rem;">📚 API Endpoints</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Endpoint</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="text-danger">SQL Injection</span></td>
+                        <td><code>/api/sql/*</code></td>
+                        <td>5 SQL injection endpoints</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-danger">XSS</span></td>
+                        <td><code>/api/xss/*</code></td>
+                        <td>6 XSS attack endpoints</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-danger">Command Injection</span></td>
+                        <td><code>/api/command/*</code></td>
+                        <td>6 command injection endpoints</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-warning">Path Traversal</span></td>
+                        <td><code>/api/traversal/*</code></td>
+                        <td>6 path traversal endpoints</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-danger">File Upload</span></td>
+                        <td><code>/api/upload/*</code></td>
+                        <td>6 insecure upload endpoints</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-warning">Brute Force</span></td>
+                        <td><code>/api/brute/*</code></td>
+                        <td>7 rate limiting failures</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Quick Start Section -->
+        <section class="demo-section mt-4">
+            <h2 class="text-center mb-4" style="font-size: 2rem;">🚀 Quick Start</h2>
+            
+            <div class="alert alert-info">
+                <strong>Ready to test?</strong> Visit the <a href="/demos/attacks.html" style="color: var(--success); text-decoration: underline;">Interactive Attacks Page</a> to try vulnerabilities in your browser!
+            </div>
+
+            <h3>Using curl (Command Line)</h3>
+            <pre><code># SQL Injection
+curl "http://localhost:3000/api/sql/users?username=admin' OR '1'='1"
+
+# XSS
+curl "http://localhost:3000/api/xss/search?q=&lt;script&gt;alert('XSS')&lt;/script&gt;"
+
+# Command Injection
+curl -X POST http://localhost:3000/api/command/ping \
+  -H "Content-Type: application/json" \
+  -d '{"host": "127.0.0.1; whoami"}'
+
+# Path Traversal
+curl "http://localhost:3000/api/traversal/download?file=../../../../etc/passwd"</code></pre>
+
+            <h3 class="mt-4">Using Postman</h3>
+            <ol style="color: var(--text-muted);">
+                <li>Import <code>postman/PreFirewallLab.postman_collection.json</code></li>
+                <li>Set variable <code>baseUrl</code> to <code>http://localhost:3000</code></li>
+                <li>Run any request to test vulnerabilities</li>
+            </ol>
+        </section>
+
+        <!-- Warning Section -->
+        <section class="demo-section mt-4">
+            <div class="alert alert-danger">
+                <h3 style="margin-bottom: 0.5rem;">⚠️ Legal & Ethical Disclaimer</h3>
+                <p>
+                    This application is INTENTIONALLY VULNERABLE for educational purposes only.
+                    Use ONLY in isolated lab environments. DO NOT deploy on production networks
+                    or expose to the internet. Obtain proper authorization before demonstrations.
+                    You are responsible for complying with all applicable laws and regulations.
+                </p>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section class="demo-section mt-4">
+            <h2 class="text-center mb-4" style="font-size: 2rem;">📖 Resources</h2>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>📄 Documentation</h3>
+                    <ul style="color: var(--text-muted);">
+                        <li><a href="/README.md" style="color: var(--success);">README.md</a> - Complete guide</li>
+                        <li><a href="/docs/demo-guide.md" style="color: var(--success);">Demo Guide</a> - Walkthrough</li>
+                        <li><a href="/docs/DEMO_CHECKLIST.md" style="color: var(--success);">Checklist</a> - Preparation</li>
+                        <li><a href="/QUICKSTART.md" style="color: var(--success);">Quick Start</a> - 5-min setup</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🛠️ Tools</h3>
+                    <ul style="color: var(--text-muted);">
+                        <li>Postman Collection (30+ requests)</li>
+                        <li>Docker Support</li>
+                        <li>Interactive Web UI</li>
+                        <li>API Documentation</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 Use Cases</h3>
+                    <ul style="color: var(--text-muted);">
+                        <li>Security demonstrations</li>
+                        <li>SOC team training</li>
+                        <li>Firewall/WAF testing</li>
+                        <li>Security awareness</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>PreFirewall Lab v1.0.0</strong></p>
+        <p>An intentionally vulnerable application for security demonstrations</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Built for education • Designed for impact • Ready for demos
+        </p>
+        <p style="color: var(--danger); font-size: 0.8rem; margin-top: 1rem;">
+            ⚠️ Use responsibly and legally • LAB USE ONLY
+        </p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
